@@ -1,0 +1,41 @@
+.el-dialog {
+  &.el-dialog {
+    box-shadow: none;
+    filter: drop-shadow(0 0 4px rgb(0 0 0 / 0.5));
+  }
+  .el-dialog__body {
+    padding: 0;
+  }
+}
+
+@keyframes gs-anime-in {
+  from {
+    opacity: 0;
+    scale: 0.9;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@keyframes gs-anime-out {
+  from {
+    opacity: 1;
+    scale: 1;
+  }
+  to {
+    opacity: 0;
+    scale: 0.9;
+  }
+}
+
+.el-overlay {
+  &.dialog-fade-enter-active .el-overlay-dialog {
+    animation: gs-anime-in var(--el-transition-duration) forwards;
+  }
+
+  &.dialog-fade-leave-active .el-overlay-dialog {
+    animation: gs-anime-out var(--el-transition-duration) forwards;
+  }
+}
