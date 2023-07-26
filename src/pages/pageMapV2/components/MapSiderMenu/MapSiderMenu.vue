@@ -62,17 +62,6 @@ const cacheTiles = computed({
 
 <template>
   <SiderMenu v-model="tabName" :collapse="collapse" @update:collapse="v => $emit('update:collapse', v)">
-    <SiderMenuItem label="个人中心" @click="openUserInfoDialog">
-      <template #icon>
-        <el-avatar
-          shape="circle"
-          class="select-none"
-          :size="38"
-          :src="userStore.info.logo || FALLBACK_AVATAR_URL"
-        />
-      </template>
-    </SiderMenuItem>
-
     <SiderMenuItem name="filter" label="点位筛选">
       <template #icon>
         <el-icon :size="38" color="var(--icon-color)" class="relative">
@@ -92,7 +81,7 @@ const cacheTiles = computed({
       <MarkerTable />
     </SiderMenuItem>
 
-    <SiderMenuItem name="setting" label="图层设置" :icon="Operation">
+    <!-- <SiderMenuItem name="setting" label="图层设置" :icon="Operation">
       <div class="h-full flex flex-col gap-2 p-4">
         <GSSwitch v-model="showTag" label="显示地图标签" />
         <GSSwitch v-model="showOverlay" label="显示附加图层" />
@@ -100,18 +89,6 @@ const cacheTiles = computed({
         <GSSwitch v-model="showTooltip" label="显示调试信息" />
         <GSSwitch v-model="cacheTiles" :label="`地图缓存-${cacheTiles ? '最大' : '自动'}`" title="内存低于8G的用户不建议勾选此项" />
       </div>
-    </SiderMenuItem>
-
-    <SiderMenuItem name="fetures" label="更多功能" :icon="Grid">
-      <FeatureGrid :features="features" @command="onFeatureCommand" />
-    </SiderMenuItem>
-
-    <SiderMenuItem label="退出" @click="userStore.logout">
-      <template #icon>
-        <el-icon color="var(--gs-color-danger)" :size="38">
-          <RemoveFilled />
-        </el-icon>
-      </template>
-    </SiderMenuItem>
+    </SiderMenuItem> -->
   </SiderMenu>
 </template>

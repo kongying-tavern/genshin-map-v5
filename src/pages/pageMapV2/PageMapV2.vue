@@ -60,10 +60,10 @@ provide(mapAffixLayerKey, mapAffixLayerRef)
           '--tw-translate-x': '-300%',
         }"
       >
-        <GSSwitch v-model="showTag" label="显示地图标签" size="large" />
-        <GSSwitch v-model="showOverlay" label="显示附加图层" size="large" />
-        <GSSwitch v-model="showBorder" label="显示图层边界" size="large" />
-        <GSSwitch v-model="showTooltip" label="显示调试信息" size="large" />
+        <!-- <GSSwitch v-model="showTag" label="显示地图标签" size="large" /> -->
+        <GSSwitch v-model="showOverlay" label="显示地下图层" size="large" />
+        <!-- <GSSwitch v-model="showBorder" label="显示图层边界" size="large" /> -->
+        <!-- <GSSwitch v-model="showTooltip" label="显示调试信息" size="large" /> -->
       </div>
 
       <div ref="mapAffixLayerRef" class="map-affix-provider">
@@ -94,7 +94,6 @@ provide(mapAffixLayerKey, mapAffixLayerRef)
       />
       <MapSiderMenu v-model:collapse="collapse" class="z-10 transition-all" :class="[interactionLayerVisible ? 'pointer-events-auto' : '-translate-x-full']" />
       <MarkerDrawer class="z-10" />
-      <MarkerCollimator :class="[interactionLayerVisible ? 'pointer-events-auto' : 'translate-x-full']" />
     </div>
 
     <div
