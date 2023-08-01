@@ -61,34 +61,5 @@ const cacheTiles = computed({
 </script>
 
 <template>
-  <SiderMenu v-model="tabName" :collapse="collapse" @update:collapse="v => $emit('update:collapse', v)">
-    <SiderMenuItem name="filter" label="点位筛选">
-      <template #icon>
-        <el-icon :size="38" color="var(--icon-color)" class="relative">
-          <Filter />
-          <div
-            v-show="markers.length > 0"
-            class="absolute w-fit bottom-0 bg-red-400 text-sm text-white font-mono rounded-full pointer-events-none px-1 select-none"
-          >
-            {{ markers.length }}
-          </div>
-        </el-icon>
-      </template>
-      <MarkerFilter />
-    </SiderMenuItem>
-
-    <SiderMenuItem name="marker-table" label="点位列表" :icon="List">
-      <MarkerTable />
-    </SiderMenuItem>
-
-    <!-- <SiderMenuItem name="setting" label="图层设置" :icon="Operation">
-      <div class="h-full flex flex-col gap-2 p-4">
-        <GSSwitch v-model="showTag" label="显示地图标签" />
-        <GSSwitch v-model="showOverlay" label="显示附加图层" />
-        <GSSwitch v-model="showBorder" label="显示图层边界" />
-        <GSSwitch v-model="showTooltip" label="显示调试信息" />
-        <GSSwitch v-model="cacheTiles" :label="`地图缓存-${cacheTiles ? '最大' : '自动'}`" title="内存低于8G的用户不建议勾选此项" />
-      </div>
-    </SiderMenuItem> -->
-  </SiderMenu>
+  <SiderMenu v-model="tabName" :collapse="collapse" @update:collapse="v => $emit('update:collapse', v)" class="rounded-2xl" />
 </template>

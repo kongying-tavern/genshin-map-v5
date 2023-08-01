@@ -16,7 +16,6 @@ defineEmits<{
       viewBox="0 0 100 100"
       class="active:brightness-90 active:scale-95 hover:scale-105 cursor-pointer transition-all duration-150"
       style="filter: drop-shadow(0 0 2px #00000060)"
-      :class="{ '-translate-y-full': !collapse }"
       @click="() => $emit('update:collapse', !collapse)"
     >
       <defs>

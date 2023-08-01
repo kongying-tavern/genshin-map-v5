@@ -52,18 +52,12 @@ provide(mapAffixLayerKey, mapAffixLayerRef)
 
     <div class="map-interaction-layer absolute left-0 top-0 w-full h-full pointer-events-none transition-all">
       <div
-        class="map-tiny-settings absolute bottom-0 p-2 flex flex-col gap-2 invisible sm:visible z-10 transition-all"
+        class="map-tiny-settings absolute bottom-0 right-36 p-2 flex flex-col gap-2 invisible sm:visible z-10 transition-all"
         :class="[
-          interactionLayerVisible ? 'pointer-events-auto' : '-translate-x-full',
+          interactionLayerVisible ? 'pointer-events-auto' : '-translate-x-6',
         ]"
-        :style="{
-          '--tw-translate-x': '-300%',
-        }"
       >
-        <!-- <GSSwitch v-model="showTag" label="显示地图标签" size="large" /> -->
         <GSSwitch v-model="showOverlay" label="显示地下图层" size="large" />
-        <!-- <GSSwitch v-model="showBorder" label="显示图层边界" size="large" /> -->
-        <!-- <GSSwitch v-model="showTooltip" label="显示调试信息" size="large" /> -->
       </div>
 
       <div ref="mapAffixLayerRef" class="map-affix-provider">
@@ -85,8 +79,9 @@ provide(mapAffixLayerKey, mapAffixLayerRef)
 
       <CollapseButton
         v-model:collapse="collapse"
+        class="absolute bottom-2 pointer-events-auto"
         :class="[
-          interactionLayerVisible ? 'pointer-events-auto' : '-translate-x-full',
+          !collapse ? 'collapsed' : 'left-0'
         ]"
         :style="{
           '--tw-translate-x': '-300%',
@@ -114,5 +109,9 @@ provide(mapAffixLayerKey, mapAffixLayerRef)
 .map-mask {
   background: radial-gradient(transparent 50%, #00000060);
   z-index: 1;
+}
+
+.collapsed{
+  left: 30rem;
 }
 </style>
