@@ -84,7 +84,6 @@ export const LAYER_CONFIGS: LayerConfig[] = [
       'A:XM:DESERT',
       'A:XM:DESERT2',
       'A:XM:DESERT3',
-      'A:FD:FENGDAN',
     ],
     tags: LAYER_TAG_CONFIGS.twt36,
     overlays: LAYER_OVERLAY_CONFIG.twt36,
