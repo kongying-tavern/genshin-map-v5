@@ -6,9 +6,7 @@ import {
   MapAffix,
   MapOverlay,
   MapSiderMenu,
-  MarkerCollimator,
-  MarkerDrawer,
-  MarkerFocusIcon,
+  MarkerPopover,
 } from './components'
 import { GSSwitch } from '@/components'
 
@@ -17,7 +15,7 @@ const mutuallyExclusiveLayerRef = ref<HTMLElement | null>(null)
 const mapAffixLayerRef = ref<HTMLElement | null>(null)
 
 const { map } = useMap(canvasRef)
-const { focus } = useMarkerDrawer(canvasRef)
+useMarkerDrawer(canvasRef)
 const { visible: interactionLayerVisible } = useInteractionLayer()
 const { showTag, showOverlay, showBorder, showTooltip } = useMapState(true)
 
@@ -72,23 +70,20 @@ provide(mapAffixLayerKey, mapAffixLayerRef)
           <MapOverlay :option-group="group" />
         </MapAffix>
 
-        <MapAffix v-if="focus" :pos="covertPosition(focus.position)">
-          <MarkerFocusIcon :marker="focus" />
-        </MapAffix>
+        <MarkerPopover />
       </div>
 
       <CollapseButton
         v-model:collapse="collapse"
         class="absolute bottom-2 pointer-events-auto"
         :class="[
-          !collapse ? 'collapsed' : 'left-0'
+          !collapse ? 'collapsed' : 'left-0',
         ]"
         :style="{
           '--tw-translate-x': '-300%',
         }"
       />
       <MapSiderMenu v-model:collapse="collapse" class="z-10 transition-all" :class="[interactionLayerVisible ? 'pointer-events-auto' : '-translate-x-full']" />
-      <MarkerDrawer class="z-10" />
     </div>
 
     <div
