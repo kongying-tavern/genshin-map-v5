@@ -1,5 +1,8 @@
 <script lang="ts" setup>
-import { Search } from '@element-plus/icons-vue'
+import {
+  Search,
+  Sunny,
+} from '@element-plus/icons-vue'
 import { useCondition } from '../../hooks'
 import { useAreaStore } from '@/stores'
 import db from '@/database'
@@ -18,6 +21,10 @@ const sort = (a: Sortable, b: Sortable) => {
   const { sortIndex: ib = 0 } = b
   return ib - ia
 }
+
+// 暗黑模式
+const isDark = useDark()
+const toggleDark = useToggle(isDark)
 
 const virtualRef = ref<HTMLElement>()
 const tooltipContent = ref<string>()
@@ -112,11 +119,12 @@ const selectItemType = (itemType: API.ItemTypeVo) => {
     <div class="overflow-hidden h-full w-full rounded-2xl">
       <div class="sider-menu-extra-panel flex-1 flex flex-col p-4" :class="{ 'is-collapse': collapse }">
         <!-- 用户栏 -->
-        <div class="bg-amber-100 w-full rounded-md h-10 py-2 px-4 flex content-center">
+        <div class="bg1 w-full rounded-md h-10 py-2 px-4 flex content-center">
           <img src="https://bbs-static.miyoushe.com/avatar/avatarDefaultPc.png" class="h-full">
           <div class="ml-2">
             地图用户
           </div>
+          <el-button :icon="Sunny" circle @click="toggleDark()" />
         </div>
 
         <!-- 点位ID搜索栏 -->
@@ -161,7 +169,7 @@ const selectItemType = (itemType: API.ItemTypeVo) => {
               <div class="item-image">
                 <img :src="icons.get(item.iconTag || '')?.url" class="m-auto w-auto h-full">
               </div>
-              <p class="pt-1 mx-auto text-center text-sm font-bold">
+              <p class="pt-1 mx-auto text-center text-sm font-bold dark:text-white text-gray-700">
                 {{ item.name }}
               </p>
             </div>
@@ -175,7 +183,7 @@ const selectItemType = (itemType: API.ItemTypeVo) => {
 <style lang="scss">
 .el-popper.is-customized.sider-menu-tooltip {
   padding: 6px 12px;
-  background: rgba(255, 249, 220, 0.8);;
+  background: rgba(255, 249, 220, 0.8);
   color: #ECE5D8;
   font-size: 16px;
 
@@ -200,7 +208,7 @@ const selectItemType = (itemType: API.ItemTypeVo) => {
 }
 
 .sider-menu-extra-panel {
-  background: rgba(255, 249, 220, 0.8);;
+  background: var(--gs-bg-color1);
   width: 100%;
   height: 100%;
   transition: all ease 150ms;
@@ -215,24 +223,29 @@ const selectItemType = (itemType: API.ItemTypeVo) => {
 
 // 物品类型
 .itemType {
-  @apply bg-gray-100 rounded-md py-1 h-fit align-bottom flex justify-center;
+  @apply rounded-md py-1 h-fit align-bottom flex justify-center;
+  background-color: var(--gs-fill-color);
   &.is-select {
-    @apply bg-blue-500 text-white;
+    @apply text-white;
+    background-color: var(--gs-primary-color);
   }
 }
 .itemType:hover {
-  @apply bg-gray-200 rounded-md py-1 h-fit align-bottom flex justify-center;
+  @apply rounded-md py-1 h-fit align-bottom flex justify-center;
+  background-color: var(--gs-hover-color);
   &.is-select {
-    @apply bg-blue-400 text-white;
+    @apply text-white;
+    background-color: var(--gs-hover-color);
   }
 }
 
 // 物品图片
 .item-image {
-  @apply h-16 w-16 mx-auto bg-slate-300 rounded-md p-2;
+  @apply h-16 w-16 mx-auto rounded-md p-2;
+  background-color: var(--gs-fill-color);
 }
 .item:hover > .item-image {
-  @apply bg-slate-200;
+  background-color: var(--gs-hover-color);
 }
 .item {
   @apply mb-2;

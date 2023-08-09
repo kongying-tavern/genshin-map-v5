@@ -1,3 +1,4 @@
+@import 'element-plus/theme-chalk/dark/css-vars.css';
 :root {
   --gs-color-danger: #CF5945;
   --gs-color-confirm: #F7BA3F;
@@ -9,8 +10,29 @@
 
   // 顶部 banner 的高度
   --gs-banner-height: 0px;
+
+  --gs-bg-color1: rgba(249, 245, 227, 80%);
+  --gs-bg-color1-notr: rgba(249, 245, 227, 100%);
+  --gs-bg-color2: #FFE180;
+  --gs-bg-color3: #FFC300;
+  --gs-primary-color: #409eff;
+  --gs-fill-color: #f5f7fa;
+  --gs-hover-color: #e5e7eb;
+}
+
+html.dark {
+  --gs-bg-color1: #303030;
+  --gs-bg-color1-notr: #262727;
+  --gs-bg-color2: #FFE180;
+  --gs-bg-color3: #FFC300;
+  --gs-fill-color: #39393a;
+  --gs-hover-color: #0f172a;
 }
 
 .gs-text-primary {
   color: var(--gs-text-color-priamry);
+}
+
+.bg1 {
+  background: var(--gs-bg-color1-notr);
 }
