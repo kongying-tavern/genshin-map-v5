@@ -1,13 +1,12 @@
 <script lang="ts" setup>
-import { CoffeeCup, Filter, Grid, List, Operation, RemoveFilled, SetUp, Setting } from '@element-plus/icons-vue'
+import { CoffeeCup, SetUp, Setting } from '@element-plus/icons-vue'
 import type { FeatureOption } from '../FeatureGrid'
 import { useCurrentLayerMarkers, useMapState } from '@/pages/pageMapV2/hooks'
-import { FeatureGrid, MarkerFilter, MarkerTable, SiderMenu, SiderMenuItem } from '@/pages/pageMapV2/components'
-import { AppSettings, GSSwitch } from '@/components'
+import { SiderMenu } from '@/pages/pageMapV2/components'
+import { AppSettings } from '@/components'
 import { useGlobalDialog } from '@/hooks'
 import { useUserStore } from '@/stores'
 import { IconGithub } from '@/components/AppIcons'
-import { FALLBACK_AVATAR_URL } from '@/shared/constant'
 
 defineProps<{
   collapse: boolean
@@ -61,5 +60,5 @@ const cacheTiles = computed({
 </script>
 
 <template>
-  <SiderMenu v-model="tabName" :collapse="collapse" @update:collapse="v => $emit('update:collapse', v)" class="rounded-2xl" />
+  <SiderMenu v-model="tabName" :collapse="collapse" class="rounded-2xl" @update:collapse="v => $emit('update:collapse', v)" />
 </template>

@@ -44,7 +44,6 @@ export class ConditionManager extends IconManager {
       throw new Error(`无法找到对应的底图设置 (areaCode: ${v})`)
     useMap().map.value?.setBaseLayer(findLayer.code)
     this.#areaCode.value = v
-    this.itemTypeId = undefined
   }
 
   /** 物品筛选绑定的物品类型数据 */

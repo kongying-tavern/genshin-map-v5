@@ -17,25 +17,13 @@ const mapAffixLayerRef = ref<HTMLElement | null>(null)
 const { map } = useMap(canvasRef)
 useMarkerDrawer(canvasRef)
 const { visible: interactionLayerVisible } = useInteractionLayer()
-const { showTag, showOverlay, showBorder, showTooltip } = useMapState(true)
+const { showOverlay } = useMapState(true)
 
 const collapse = ref(true)
 useEventListener('keypress', (ev) => {
   if (ev.code === 'Backquote')
     collapse.value = !collapse.value
 })
-
-const covertPosition = (positionExpression?: string) => {
-  if (!positionExpression)
-    return
-  try {
-    const pos = positionExpression.split(',').map(Number).slice(0, 2)
-    return pos as [number, number]
-  }
-  catch {
-    return undefined
-  }
-}
 
 provide(genshinMapCanvasKey, canvasRef)
 provide(mutuallyExclusiveLayerKey, mutuallyExclusiveLayerRef)
@@ -83,7 +71,17 @@ provide(mapAffixLayerKey, mapAffixLayerRef)
           '--tw-translate-x': '-300%',
         }"
       />
-      <MapSiderMenu v-model:collapse="collapse" class="z-10 transition-all" :class="[interactionLayerVisible ? 'pointer-events-auto' : '-translate-x-full']" />
+      <MapSiderMenu
+        v-model:collapse="collapse"
+        class="z-10 transition-all"
+        :class="[interactionLayerVisible ? 'pointer-events-auto' : '-translate-x-full']"
+      />
+
+      <div
+        ref="mutuallyExclusiveLayerRef"
+        class="mutually-exclusive-layer absolute left-0 top-0 w-full h-full"
+        :class="{ 'pointer-events-none': interactionLayerVisible }"
+      />
     </div>
 
     <div
