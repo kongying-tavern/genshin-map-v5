@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Check, CirclePlus, DeleteFilled, Edit, Rank } from '@element-plus/icons-vue'
+import { Check, CirclePlus } from '@element-plus/icons-vue'
 import { covertPosition } from '../../utils'
 import { useCondition, useMarkerDrawer } from '../../hooks'
 import { MapAffix, MarkerEditPanel } from '..'
@@ -82,15 +82,6 @@ const openMarkerEditor = () => {
       </template>
 
       <template #footer>
-        <GSButton size="small" theme="dark" @click="openMarkerEditor">
-          <template #icon>
-            <el-icon color="#F7BA3F">
-              <Edit />
-            </el-icon>
-          </template>
-          编辑
-        </GSButton>
-
         <GSButton :theme="isFinished ? undefined : 'dark'" class="flex-1" size="small" @click="isFinished = !isFinished">
           <template #icon>
             <el-icon :color="isFinished ? 'var(--el-color-success)' : 'var(--el-color-info)'">
@@ -98,22 +89,6 @@ const openMarkerEditor = () => {
             </el-icon>
           </template>
           {{ isFinished ? '已完成' : '完成' }}
-        </GSButton>
-
-        <GSButton size="small" theme="dark" title="移动点位">
-          <template #icon>
-            <el-icon color="#F7BA3F">
-              <Rank />
-            </el-icon>
-          </template>
-        </GSButton>
-
-        <GSButton size="small" theme="dark" title="删除点位">
-          <template #icon>
-            <el-icon color="#CF5945">
-              <DeleteFilled />
-            </el-icon>
-          </template>
         </GSButton>
       </template>
     </MarkerPanel>
