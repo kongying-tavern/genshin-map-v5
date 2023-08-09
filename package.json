@@ -8,10 +8,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:stage": "vite build --mode stage",
     "build:dev": "vite build --mode development",
-    "preview": "vite preview --mode development",
-    "preview:stage": "vite preview --mode stage",
+    "preview": "vite preview",
     "lint": "eslint ./src/**/*.{js,jsx,ts,tsx,vue} --fix"
   },
   "dependencies": {
