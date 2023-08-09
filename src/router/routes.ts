@@ -5,12 +5,12 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     meta: {
-      title: '地图页',
+      title: '空荧酒馆',
       preload: true,
       icon: 'MapLocation',
     },
     component: () => import('@/pages/pageMapV2/PageMapV2.vue'),
-  }
+  },
 ]
 
 export default routes
