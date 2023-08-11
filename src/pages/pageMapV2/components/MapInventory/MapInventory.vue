@@ -71,7 +71,6 @@ const removeItem = (item: API.ItemVo) => {
       const area = areas.value.find(area => area.code === areaCode)
       const type = itemTypes.value.find(type => type.id === Number(typeId))
       itemIdsMap[i].splice(index, 1)
-      console.log('remove', item.id!, i, area, type, itemIdsMap[i])
       // this.#putCondition(area, type, itemIdsMap[i])
       conditionManager.deleteItem(area!, type!, itemIdsMap[i])
       break

@@ -266,8 +266,6 @@ export class ConditionManager extends IconManager {
   /** 将筛选器状态保存到本地数据库 */
   saveState = async (name: string) => {
     const userStore = useUserStore()
-    if (!userStore.info.id)
-      return
 
     const filterState = {
       name,
@@ -285,13 +283,12 @@ export class ConditionManager extends IconManager {
       ...userStore.preference,
       filterStates,
     }
+    console.log(userStore.preference)
     await userStore.syncUserPreference()
   }
 
   deleteState = async (name: string) => {
     const userStore = useUserStore()
-    if (!userStore.info.id)
-      return
     if (name === 'temp')
       return
     const filterStates = [...(userStore.preference.filterStates ?? [])]
@@ -314,8 +311,6 @@ export class ConditionManager extends IconManager {
    */
   loadState = (name: string) => this.#useRenderMission(async (requestRender) => {
     const userStore = useUserStore()
-    if (userStore.info.id === undefined)
-      return
 
     const findState = userStore.preference.filterStates?.find(state => state.name === name)
     if (!findState)

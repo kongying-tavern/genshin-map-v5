@@ -105,6 +105,11 @@ const itemTypes = asyncComputed<API.ItemTypeVo[]>(async () => {
 const selectItemType = (itemType: API.ItemTypeVo) => {
   conditionManager.itemTypeId = itemType.id
 }
+
+// 重新进入应用时获取上次操作后的条件列表
+onMounted(() => {
+  conditionManager.loadState('temp')
+})
 </script>
 
 <template>

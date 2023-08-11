@@ -1,12 +1,9 @@
 import { defineStore } from 'pinia'
 import { ElMessage } from 'element-plus'
-import Api from '@/api/api'
 import Oauth from '@/api/oauth'
 import { Logger, messageFrom } from '@/utils'
-import { router } from '@/router'
 import { RoleTypeEnum } from '@/shared'
 import {
-  useArchiveStore,
   useAreaStore,
   useIconTagStore,
   useItemStore,
@@ -29,8 +26,6 @@ const ADMIN_ROLES = [RoleTypeEnum.ADMIN, RoleTypeEnum.MAP_MANAGER]
 /** token 刷新的阈值时间 */
 const TOKEN_REFRESH_REST_TIME = import.meta.env.VITE_TOKEN_REFRESH_REST_TIME * 1000
 
-/** 持久化存储的用户信息 */
-const localUserInfo = useLocalStorage<API.SysUserVo>('__ys_user_info', {})
 /** 持久化存储的鉴权信息 */
 const localUserAuth = useLocalStorage<Partial<UserAuth>>('__ys_dadian_auth', {})
 /** 鉴权刷新计时器 */
@@ -49,8 +44,6 @@ export const useUserStore = defineStore('user-info', {
   state: () => ({
     /** 用户鉴权信息 */
     auth: localUserAuth.value,
-    /** 用户基本信息 */
-    info: localUserInfo.value,
     /** 用户本地设置 */
     preference: {} as UserPreference,
     /** 是否正在进行预加载任务 */
@@ -151,30 +144,14 @@ export const useUserStore = defineStore('user-info', {
     async refreshAuth() {
       try {
         const auth = await Oauth.oauth.token()
-        console.log(auth)
         this.setAuth(auth)
       }
       catch (err) {
         logger.error('刷新 token 失败，原因为：', messageFrom(err))
       }
     },
-    /** 更新用户信息 */
-    async updateUserInfo() {
-      try {
-        if (!this.auth.userId)
-          throw new Error('用户 id 为空')
-        const { data = {} } = await Api.sysUserController.getUserInfo({ userId: this.auth.userId })
-        this.info = data
-        localUserInfo.value = data
-      }
-      catch (err) {
-        ElMessage.error(`更新用户信息失败，原因为：${messageFrom(err)}`)
-      }
-    },
     async updateUserPreference() {
-      if (this.info.id === undefined)
-        return
-      const userPreference = await db.user.get(this.info.id)
+      const userPreference = await db.user.get(1)
       this.preference = userPreference ?? {}
     },
     /** 预加载任务，仅在 token 可用时或登陆后运行 */
@@ -198,10 +175,8 @@ export const useUserStore = defineStore('user-info', {
     /** 向本地数据库同步用户设置 */
     async syncUserPreference() {
       try {
-        if (this.info.id === undefined)
-          return
         const payload = {
-          id: this.info.id,
+          id: 1,
           ...JSON.parse(JSON.stringify(this.preference)),
         }
         await db.user.put(payload)
