@@ -109,7 +109,7 @@ const selectItemType = (itemType: API.ItemTypeVo) => {
 
 <template>
   <div class="sider-menu absolute top-0 left-0 bottom-0 flex" :class="{ 'is-collapse': collapse }">
-    <div class="overflow-hidden h-full w-full rounded-2xl">
+    <div class="overflow-hidden h-full w-full rounded-lg">
       <div class="sider-menu-extra-panel flex-1 flex flex-col p-4" :class="{ 'is-collapse': collapse }">
         <!-- 用户栏 -->
         <div class="bg-[--gs-fill-color] w-full rounded-md h-10 py-2 px-4 flex content-center">
@@ -188,8 +188,7 @@ const selectItemType = (itemType: API.ItemTypeVo) => {
 
 <style lang="scss" scoped>
 .sider-menu {
-  margin: 20px;
-  border-radius: 16px;
+  margin: 16px;
   width: 450px;
   max-width: 100%;
   @media screen and (width < 500px) {
