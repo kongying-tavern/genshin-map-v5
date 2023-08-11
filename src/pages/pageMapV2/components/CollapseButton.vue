@@ -11,12 +11,13 @@ defineEmits<{
 <template>
   <div v-bind="$attrs" class="sidebar-control-layer absolute p-2 z-10 transition-all">
     <div class="bg-[--gs-bg-color1] p-1 rounded-lg cursor-pointer">
+      <!-- 收起 -->
       <svg
         v-if="!collapse" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="none"
         version="1.1"
         class="active:brightness-90 transition-all duration-150"
-        width="60" viewBox="0 0 66 66"
-        height="60"
+        width="50" viewBox="0 0 66 66"
+        height="50"
         @click="() => $emit('update:collapse', !collapse)"
       >
         <defs>
@@ -34,11 +35,12 @@ defineEmits<{
           </g>
         </g>
       </svg>
+      <!-- 展开 -->
       <svg
         v-if="collapse" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="none" version="1.1"
         class="active:brightness-90 transition-all duration-150"
-        width="60"
-        height="60"
+        width="50"
+        height="50"
         viewBox="0 0 66 66"
         @click="() => $emit('update:collapse', !collapse)"
       >
