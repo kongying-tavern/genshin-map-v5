@@ -116,6 +116,11 @@ export class ConditionManager extends IconManager {
 
   get existItemIds() { return this.#existItemIds.value }
 
+  /** 根据物品 id 删除物品 */
+  deleteItem = (area: API.AreaVo, type: API.ItemTypeVo, v: number[]) => {
+    this.#putCondition(area, type, v)
+  }
+
   /** 条件管理器是否正在进行预渲染 */
   #isPreRendering = ref(false)
   get isPreRendering() { return this.#isPreRendering.value }

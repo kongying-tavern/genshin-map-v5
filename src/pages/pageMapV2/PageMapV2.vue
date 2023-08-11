@@ -4,6 +4,7 @@ import { genshinMapCanvasKey, mapAffixLayerKey, mutuallyExclusiveLayerKey } from
 import {
   CollapseButton,
   MapAffix,
+  MapInventory,
   MapOverlay,
   MapSiderMenu,
   MarkerPopover,
@@ -37,6 +38,7 @@ provide(mapAffixLayerKey, mapAffixLayerRef)
     <canvas ref="canvasRef" class="map-renderer w-full h-full bg-black" />
 
     <div class="map-interaction-layer absolute left-0 top-0 w-full h-full pointer-events-none transition-all">
+      <!-- 地图设置 -->
       <div
         class="map-tiny-settings absolute bottom-0 right-36 p-2 flex flex-col gap-2 invisible sm:visible z-10 transition-all"
         :class="[
@@ -46,6 +48,7 @@ provide(mapAffixLayerKey, mapAffixLayerRef)
         <GSSwitch v-model="showOverlay" label="显示地下图层" size="large" />
       </div>
 
+      <!-- 地下图层 -->
       <div ref="mapAffixLayerRef" class="map-affix-provider">
         <MapAffix
           v-for="(group, key) in map?.baseLayer?.overlayManager?.overlayGroups"
@@ -61,6 +64,7 @@ provide(mapAffixLayerKey, mapAffixLayerRef)
         <MarkerPopover />
       </div>
 
+      <!-- 收起按钮 -->
       <CollapseButton
         v-model:collapse="collapse"
         class="absolute bottom-2 pointer-events-auto"
@@ -71,6 +75,20 @@ provide(mapAffixLayerKey, mapAffixLayerRef)
           '--tw-translate-x': '-300%',
         }"
       />
+
+      <!-- 选中物品栏 -->
+      <MapInventory
+        v-model:collapse="collapse"
+        class="absolute top-2 pointer-events-auto"
+        :class="[
+          !collapse ? 'collapsed' : 'left-0',
+        ]"
+        :style="{
+          '--tw-translate-x': '-300%',
+        }"
+      />
+
+      <!-- 侧边栏 -->
       <MapSiderMenu
         v-model:collapse="collapse"
         class="z-10 transition-all"

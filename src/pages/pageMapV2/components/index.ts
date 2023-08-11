@@ -1,5 +1,6 @@
 export { MapAffix } from './MapAffix'
 export { MapContextMenu } from './MapContextMenu'
+export { MapInventory } from './MapInventory'
 export { MapOverlay } from './MapOverlay'
 export { MapSiderMenu } from './MapSiderMenu'
 export { MarkerFilter } from './MarkerFilter'
