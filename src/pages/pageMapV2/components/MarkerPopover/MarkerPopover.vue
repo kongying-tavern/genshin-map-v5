@@ -2,13 +2,12 @@
 import { Check, CirclePlus } from '@element-plus/icons-vue'
 import { covertPosition } from '../../utils'
 import { useCondition, useMarkerDrawer } from '../../hooks'
-import { MapAffix, MarkerEditPanel } from '..'
+import { MapAffix } from '..'
 import { MarkerPanel } from './components'
 import { useMarkerExtra, useMarkerFinished, useSkeletonPicture } from './hooks'
 import { useIconTagStore } from '@/stores'
 import { CloseFilled } from '@/components/GenshinUI/GSIcon'
 import { GSButton } from '@/components'
-import { useGlobalDialog } from '@/hooks'
 
 const iconTagStore = useIconTagStore()
 
@@ -22,24 +21,6 @@ const { isUnderground, hiddenFlagType, refreshTimeType } = useMarkerExtra(cached
 
 const conditionManager = useCondition()
 watch(() => conditionManager.existItemIds, blur)
-
-// ==================== 编辑点位 ====================
-const { DialogService } = useGlobalDialog()
-const openMarkerEditor = () => {
-  focus.value && DialogService
-    .config({
-      title: `编辑点位：${focus.value.markerTitle}`,
-      width: 'fit-content',
-      alignCenter: true,
-      showClose: false,
-      closeOnClickModal: false,
-      closeOnPressEscape: false,
-    })
-    .props({
-      markerInfo: focus.value,
-    })
-    .open(MarkerEditPanel)
-}
 </script>
 
 <template>
