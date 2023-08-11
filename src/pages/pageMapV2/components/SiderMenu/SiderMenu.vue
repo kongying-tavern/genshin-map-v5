@@ -60,12 +60,6 @@ db.iconTag.each((res) => {
 
 // 地区
 const areaStore = useAreaStore()
-const areaId = computed(() => {
-  for (const i in areaStore._areaList) {
-    if (areaStore._areaList[i].code === conditionManager.areaCode)
-      return areaStore._areaList[i].id
-  }
-})
 const areas = computed(() => {
   return areaStore._areaList.filter((area) => {
     return area.isFinal
@@ -77,7 +71,7 @@ interface ItemVo extends API.ItemVo {
   child?: number[]
 }
 
-const items = asyncComputed<API.ItemVo[]>(async () => {
+const items = asyncComputed<ItemVo[]>(async () => {
   if (conditionManager.area === undefined || conditionManager.itemType === undefined)
     return []
   const res = await db.item
@@ -89,7 +83,6 @@ const items = asyncComputed<API.ItemVo[]>(async () => {
 }, [])
 
 const selectItem = (item: API.ItemVo) => {
-  // conditionManager.itemIds = item.id
   const shallowCopyValue = [...conditionManager.itemIds]
   const findIndex = shallowCopyValue.findIndex((value: number) => value === item.id)
   if (findIndex > -1)
@@ -119,7 +112,7 @@ const selectItemType = (itemType: API.ItemTypeVo) => {
     <div class="overflow-hidden h-full w-full rounded-2xl">
       <div class="sider-menu-extra-panel flex-1 flex flex-col p-4" :class="{ 'is-collapse': collapse }">
         <!-- 用户栏 -->
-        <div class="bg1 w-full rounded-md h-10 py-2 px-4 flex content-center">
+        <div class="bg-[--gs-fill-color] w-full rounded-md h-10 py-2 px-4 flex content-center">
           <img src="https://bbs-static.miyoushe.com/avatar/avatarDefaultPc.png" class="h-full">
           <div class="ml-2">
             地图用户
@@ -165,11 +158,11 @@ const selectItemType = (itemType: API.ItemTypeVo) => {
         <!-- 物品 -->
         <div class="flex-1 mt-3 overflow-y-auto scrollbar">
           <div class="w-full grid grid-cols-5 gap-2">
-            <div v-for="item in items" :key="item.id" class="flex flex-col item" :class="{ 'is-select': isInCondition(item) }" @click="selectItem(item)">
+            <div v-for="item in items" :key="item.id" class="flex flex-col item group" :class="{ 'is-select': isInCondition(item) }" @click="selectItem(item)">
               <div class="item-image">
                 <img :src="icons.get(item.iconTag || '')?.url" class="m-auto w-auto h-full">
               </div>
-              <p class="pt-1 mx-auto text-center text-sm font-bold dark:text-white text-gray-700">
+              <p class="pt-1 mx-auto text-center text-sm font-bold dark:font-normal dark:text-white text-gray-700">
                 {{ item.name }}
               </p>
             </div>
@@ -223,34 +216,20 @@ const selectItemType = (itemType: API.ItemTypeVo) => {
 
 // 物品类型
 .itemType {
-  @apply rounded-md py-1 h-fit align-bottom flex justify-center;
-  background-color: var(--gs-fill-color);
+  @apply rounded-md py-1 h-fit align-bottom flex justify-center hover:brightness-90 bg-[--gs-fill-color];
   &.is-select {
-    @apply text-white;
-    background-color: var(--gs-primary-color);
-  }
-}
-.itemType:hover {
-  @apply rounded-md py-1 h-fit align-bottom flex justify-center;
-  background-color: var(--gs-hover-color);
-  &.is-select {
-    @apply text-white;
-    background-color: var(--gs-hover-color);
+    @apply text-white bg-[--gs-primary-color];
   }
 }
 
 // 物品图片
 .item-image {
-  @apply h-16 w-16 mx-auto rounded-md p-2;
-  background-color: var(--gs-fill-color);
-}
-.item:hover > .item-image {
-  background-color: var(--gs-hover-color);
+  @apply h-16 w-16 mx-auto rounded-md p-2 bg-[--gs-fill-color] group-hover:brightness-90;
 }
 .item {
   @apply mb-2;
   &.is-select > .item-image {
-    @apply bg-yellow-200 ;
+    @apply bg-[--gs-bg-color1-notr] dark:backdrop-brightness-50;
   }
 }
 
@@ -262,6 +241,6 @@ const selectItemType = (itemType: API.ItemTypeVo) => {
 }
 
 .scrollbar::-webkit-scrollbar-thumb {
-  @apply bg-gray-200 rounded-md;
+  @apply bg-gray-200 dark:bg-gray-600 rounded-md;
 }
 </style>
