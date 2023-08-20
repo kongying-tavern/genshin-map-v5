@@ -27,7 +27,7 @@ const ADMIN_ROLES = [RoleTypeEnum.ADMIN, RoleTypeEnum.MAP_MANAGER]
 const TOKEN_REFRESH_REST_TIME = import.meta.env.VITE_TOKEN_REFRESH_REST_TIME * 1000
 
 /** 持久化存储的鉴权信息 */
-const localUserAuth = useLocalStorage<Partial<UserAuth>>('__ys_dadian_auth', {})
+const localUserAuth = useLocalStorage<Partial<UserAuth>>('__ysmap_auth', {})
 /** 鉴权刷新计时器 */
 const intervalRefreshTimer = ref<number>()
 

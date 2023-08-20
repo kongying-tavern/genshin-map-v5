@@ -283,7 +283,6 @@ export class ConditionManager extends IconManager {
       ...userStore.preference,
       filterStates,
     }
-    console.log(userStore.preference)
     await userStore.syncUserPreference()
   }
 
