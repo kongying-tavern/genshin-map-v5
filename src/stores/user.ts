@@ -26,8 +26,10 @@ const ADMIN_ROLES = [RoleTypeEnum.ADMIN, RoleTypeEnum.MAP_MANAGER]
 /** token 刷新的阈值时间 */
 const TOKEN_REFRESH_REST_TIME = import.meta.env.VITE_TOKEN_REFRESH_REST_TIME * 1000
 
+/** 持久化存储的用户信息 */
+const localUserInfo = useLocalStorage<API.SysUserVo>('__ys_user_info', {})
 /** 持久化存储的鉴权信息 */
-const localUserAuth = useLocalStorage<Partial<UserAuth>>('__ysmap_auth', {})
+const localUserAuth = useLocalStorage<Partial<UserAuth>>('__ys_dadian_auth', {})
 /** 鉴权刷新计时器 */
 const intervalRefreshTimer = ref<number>()
 
@@ -44,6 +46,8 @@ export const useUserStore = defineStore('user-info', {
   state: () => ({
     /** 用户鉴权信息 */
     auth: localUserAuth.value,
+    /** 用户基本信息 */
+    info: localUserInfo.value,
     /** 用户本地设置 */
     preference: {} as UserPreference,
     /** 是否正在进行预加载任务 */
@@ -140,7 +144,7 @@ export const useUserStore = defineStore('user-info', {
       this.auth = userAuth
       localUserAuth.value = userAuth
     },
-    /** 刷新鉴权信息(客户端模式) */
+    /** 刷新鉴权信息 */
     async refreshAuth() {
       try {
         const auth = await Oauth.oauth.token()
@@ -175,6 +179,8 @@ export const useUserStore = defineStore('user-info', {
     /** 向本地数据库同步用户设置 */
     async syncUserPreference() {
       try {
+        if (this.info.id === undefined)
+          return
         const payload = {
           id: 1,
           ...JSON.parse(JSON.stringify(this.preference)),

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { Check, CirclePlus } from '@element-plus/icons-vue'
 import { covertPosition } from '../../utils'
-import { useCondition, useMarkerDrawer } from '../../hooks'
+import { useCondition, useMap, useMarkerFocus } from '../../hooks'
 import { MapAffix } from '..'
 import { MarkerPanel } from './components'
 import { useMarkerExtra, useMarkerFinished, useSkeletonPicture } from './hooks'
@@ -11,7 +11,7 @@ import { GSButton } from '@/components'
 
 const iconTagStore = useIconTagStore()
 
-const { cachedMarkerVo, focus, blur } = useMarkerDrawer()
+const { cachedMarkerVo, focus, blur } = useMarkerFocus()
 
 const { pictureUrl, loading: imageLoading } = useSkeletonPicture(cachedMarkerVo)
 
@@ -19,8 +19,9 @@ const { isFinished } = useMarkerFinished(cachedMarkerVo)
 
 const { isUnderground, hiddenFlagType, refreshTimeType } = useMarkerExtra(cachedMarkerVo)
 
+const { map } = useMap()
 const conditionManager = useCondition()
-watch(() => conditionManager.existItemIds, blur)
+watch(() => conditionManager.layerMarkerMap[map.value?.baseLayer?.rawProps.code ?? ''], blur)
 </script>
 
 <template>

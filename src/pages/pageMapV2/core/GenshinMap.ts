@@ -7,6 +7,7 @@ import type { GenshinMapState } from '../hooks'
 import { getDefaultMapState } from '../hooks'
 import { EventBus, GenshinBaseLayer, StateManager } from '.'
 import genshinFont from '@/style/fonts/genshinFont.woff2?url'
+import { useMapStore } from '@/stores'
 
 export interface GenshinMapOptions extends DeckProps {
   canvas: HTMLCanvasElement
@@ -70,9 +71,10 @@ export class GenshinMap extends Deck {
       controller: {
         doubleClickZoom: false,
         scrollZoom: {
-          speed: 0.01,
+          speed: 0.002,
           smooth: true,
         },
+        inertia: 300,
       },
       getCursor: state => state.isDragging
         ? 'grabbing'
@@ -109,23 +111,35 @@ export class GenshinMap extends Deck {
   get stateManager() { return this.#stateManager }
   #stateManager = new StateManager<GenshinMap, GenshinMapState>(this, getDefaultMapState())
 
-  #handleViewStateChange = ({ viewState, oldViewState = {}, ...rest }: ViewStateChangeParameters & { viewId: string }) => {
+  #handleViewStateChange = ({ viewState, oldViewState = {}, interactionState, ...rest }: ViewStateChangeParameters) => {
     const newState = viewState as GensinMapViewState
     const oldState = oldViewState as Partial<GensinMapViewState>
-    if (!this.baseLayer)
-      return { viewState: newState, oldViewState: oldState, ...rest }
-    const [xmin, ymax, xmax, ymin] = this.baseLayer.rawProps.bounds
+
+    const isMovingMarkers = useMapStore().mission?.type === 'moveMarkers'
+
+    const rewriteTarget = ((): Coordinate2D => {
+      if (isMovingMarkers)
+        return oldState.target ?? [0, 0]
+      if (!this.baseLayer)
+        return newState.target
+      const [xmin, ymax, xmax, ymin] = this.baseLayer.rawProps.bounds
+      return [clamp(newState.target[0], xmin, xmax), clamp(newState.target[1], ymin, ymax)]
+    })()
+
     const rewriteState: GensinMapViewState = {
       ...newState,
-      target: [
-        clamp(newState.target[0], xmin, xmax),
-        clamp(newState.target[1], ymin, ymax),
-      ],
-      transitionDuration: newState.zoom === oldState.zoom ? 0 : 200,
+      target: rewriteTarget,
+      zoom: isMovingMarkers ? oldState.zoom ?? 0 : newState.zoom,
+      ...(interactionState.isZooming
+        ? {
+            transitionDuration: 32,
+            transitionEasing: TRANSITION.LINEAR,
+          }
+        : {}),
     }
-    this.#mainViewState.value = rewriteState
-    this.baseLayer?.forceUpdate()
-    return { viewState: rewriteState, oldViewState: oldState, ...rest }
+
+    this.mainViewState = rewriteState
+    return { viewState: rewriteState, oldViewState: oldState, interactionState, ...rest }
   }
 
   #readResolve?: (map: GenshinMap) => void = undefined
@@ -135,6 +149,11 @@ export class GenshinMap extends Deck {
 
   // ==================== 视口状态 ====================
   get mainViewState() { return this.#mainViewState.value }
+  set mainViewState(v) {
+    this.#mainViewState.value = v
+    this.baseLayer?.forceUpdate()
+  }
+
   #mainViewState = ref<GensinMapViewState>({
     maxRotationX: 90,
     minRotationX: -90,
@@ -145,24 +164,23 @@ export class GenshinMap extends Deck {
     maxZoom: 2,
     target: [0, 0],
     transitionDuration: 0,
-    transitionEasing: TRANSITION.EASE_OUT,
+    transitionEasing: TRANSITION.LINEAR,
     transitionInterruption: TRANSITION_EVENTS.BREAK,
   })
 
   updateViewState = (viewState: Partial<GensinMapViewState>) => {
-    const rewriteViewState = {
+    // FIXME 2023-08-06: 这里必须先设置为空后再次设置才能生效，或许使用方法不对
+    const rewriteState = {
       ...this.mainViewState,
       ...viewState,
-      transitionDuration: 200,
     }
-    // FIXME 2023-06-13: 这里必须先置位空后再次设置才能生效，或许使用方法不对，但文档写的确实不全
     this.setProps({
       initialViewState: undefined,
     })
     this.setProps({
-      initialViewState: rewriteViewState,
+      initialViewState: rewriteState,
     })
-    this.baseLayer?.forceUpdate()
+    this.mainViewState = rewriteState
   }
 
   // ==================== 图层状态 ====================

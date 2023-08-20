@@ -1,36 +1,86 @@
+export interface IconRenderConfig {
+  debug?: boolean
+  /** 点位整体图标尺寸设置（需包含底部阴影的尺寸） */
+  size: {
+    w: number
+    h: number
+  }
+  /** 点位坐标指示点在图标中的位置 */
+  affix: {
+    x: number
+    y: number
+  }
+  /** 点位被设置为不显眼时的透明度 */
+  inconspicuousOpacity: number
+  /** 点位的定位状态 */
+  positions: {
+    position: string
+    icon?: { url: string; size: [number, number]; pos: [number, number] }
+  }[]
+  /** 点位根据状态不同显示不同颜色的边框 */
+  states: {
+    state: string
+    color: string
+  }[]
+  /** 图标内容区设置 */
+  content: {
+    radius: number
+    fit: 'contain' | 'cover'
+  }
+  /** 点位底部阴影设置 */
+  shadow: {
+    color: string
+    radiusX: number
+    radiusY: number
+  }
+  /** 点位外边框设置 */
+  border: {
+    width: number
+    color: string
+  }
+}
+
 /** IconLayer 渲染图标的配置 */
+export const ICON: IconRenderConfig = {
+  // debug: true,
+  size: {
+    w: 42,
+    h: 50,
+  },
+  affix: {
+    x: 21,
+    y: 45,
+  },
+  inconspicuousOpacity: 0.2,
+  positions: [
+    { position: 'aboveground' },
+    { position: 'underground', icon: { url: '/icons/LayerUndergroundMark.png', size: [20, 20], pos: [22, 0] } },
+  ],
+  states: [
+    { state: 'default', color: '#FFF' },
+    { state: 'marked', color: '#00FFFD' },
+    { state: 'moving', color: '#FFFF00' },
+  ],
+  content: {
+    radius: 16,
+    fit: 'contain',
+  },
+  shadow: {
+    color: '#33333380',
+    radiusX: 10,
+    radiusY: 5,
+  },
+  border: {
+    width: 1,
+    color: '#33333360',
+  },
+}
 
-/** 图标的半透边框的尺寸需要注意，图标的实际定位坐标会被设置于实心钉子处而不是半透边框钉子处 */
-export const BORDER_WIDTH = 2
-
-/** 图标的半透边框的颜色 */
-export const BORDER_COLOR = '#40404080'
-
-/** 图标背景色 */
-export const BACKGROUND_COLOR = '#FFF'
-
-/** 图标 hover 时的背景色 */
-export const BACKGROUND_HOVER_COLOR = '#DDD'
-
-/** 图标 active 时的背景色 */
-export const BACKGROUND_ACTIVE_COLOR = '#AAA'
-
-/** 图标 focus 时的背景色 */
-export const BACKGROUND_FOCUS_COLOR = 'skyblue'
-
-/** 图标被标记时的透明度 (0 ~ 1) */
-export const ICON_MARKERDE_ALPHA = 0.2
-
-/** 图标宽度 */
-export const ICON_WIDTH = 40
-/** 图标高度 */
-export const ICON_HEIGHT = ICON_WIDTH * 1.25
-
-/** 图标内圆与外圆的间距 */
-export const INNER_GAP = 4
-
-/** 图标实际占用尺寸 */
-export const ICON_RECT = [
-  ICON_WIDTH + 2 * BORDER_WIDTH,
-  ICON_HEIGHT + 2 * BORDER_WIDTH,
-] as [number, number]
+/**
+* 总计需要渲染的状态，
+* 并按照以 `positions` 为分组的顺序渲染
+*/
+export const ICON_MAPPING_STATES = ICON.positions.reduce((seed, { position }) => {
+  ICON.states.forEach(({ state }) => seed.push(`_${position}_${state}`))
+  return seed
+}, [] as string[])

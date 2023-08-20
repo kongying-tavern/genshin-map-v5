@@ -22,7 +22,7 @@ const coverter = (cfg: TempTagConfig): TagOptions => {
 }
 
 export const LAYER_TAG_CONFIGS: Record<string, TagOptions[]> = {
-  twt36: ([
+  twt40: ([
     // 蒙德
     ['明冠山地', [917, -4337], 1],
     ['苍风高地', [1260, -3553], 1],

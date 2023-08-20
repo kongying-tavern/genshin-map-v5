@@ -67,10 +67,10 @@ export interface LayerConfig {
 
 export const LAYER_CONFIGS: LayerConfig[] = [
   {
-    code: 'twt36',
+    code: 'twt40',
     name: '提瓦特',
-    size: [17408, 16384],
-    tilesOffset: [5632, 0],
+    size: [17408, 17408],
+    tilesOffset: [5888, 2048],
     center: [3568, 6286],
     areaCodes: [
       'A:MD:MENGDE',
@@ -84,9 +84,10 @@ export const LAYER_CONFIGS: LayerConfig[] = [
       'A:XM:DESERT',
       'A:XM:DESERT2',
       'A:XM:DESERT3',
+      'A:FD:FENGDAN',
     ],
-    tags: LAYER_TAG_CONFIGS.twt36,
-    overlays: LAYER_OVERLAY_CONFIG.twt36,
+    tags: LAYER_TAG_CONFIGS.twt40,
+    overlays: LAYER_OVERLAY_CONFIG.twt40,
     initViewState: {
       target: [-3184, -169],
       zoom: 0,

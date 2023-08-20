@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useInteractionLayer, useMap, useMapState, useMarkerDrawer } from './hooks'
+import { useInteractionLayer, useMap, useMapState } from './hooks'
 import { genshinMapCanvasKey, mapAffixLayerKey, mutuallyExclusiveLayerKey } from './shared'
 import {
   CollapseButton,
@@ -16,7 +16,6 @@ const mutuallyExclusiveLayerRef = ref<HTMLElement | null>(null)
 const mapAffixLayerRef = ref<HTMLElement | null>(null)
 
 const { map } = useMap(canvasRef)
-useMarkerDrawer(canvasRef)
 const { visible: interactionLayerVisible } = useInteractionLayer()
 const { showOverlay } = useMapState(true)
 

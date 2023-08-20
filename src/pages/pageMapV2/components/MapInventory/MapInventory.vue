@@ -71,16 +71,10 @@ const removeItem = (item: API.ItemVo) => {
       const area = areas.value.find(area => area.code === areaCode)
       const type = itemTypes.value.find(type => type.id === Number(typeId))
       itemIdsMap[i].splice(index, 1)
-      // this.#putCondition(area, type, itemIdsMap[i])
       conditionManager.deleteItem(area!, type!, itemIdsMap[i])
       break
     }
   }
-  // conditionManager.deleteItem(
-  //   item.id || 0,
-  //   areas.value.find(area => area.id === item.areaId) || {},
-  //   itemTypes.value.find(type => item.typeIdList?.includes(type.id || 0)) || {},
-  // )
 }
 </script>
 

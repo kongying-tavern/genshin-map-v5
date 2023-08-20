@@ -1,35 +1,40 @@
 import { IconLayer } from '@deck.gl/layers/typed'
-import type { GenshinBaseLayer } from '../core'
+import type { GenshinBaseLayer, MarkerWithRenderConfig } from '../core'
 import { useCondition } from '@/pages/pageMapV2/hooks'
 import { useArchiveStore } from '@/stores'
 import { isMarkerVo } from '@/utils'
+import { ICON } from '@/pages/pageMapV2/config'
 
 /** 点位渲染属性 */
-export const getMarkersFrom = (target: GenshinBaseLayer): IconLayer<API.MarkerVo> => {
-  const { center } = target.rawProps
+export const getMarkersFrom = (target: GenshinBaseLayer): IconLayer<MarkerWithRenderConfig> => {
   const conditionManager = useCondition()
   const { stateManager } = target.context.deck
   const archiveStore = useArchiveStore()
 
-  // TODO 优化可能
-  // 由于每个 marker 有多个物品，但并不是每个物品在预渲染时都会被 iconMap 收集，这里只能去找存在于 iconMap 里的物品
-  const findValidItemId = (items: API.MarkerItemLinkVo[] = []) => {
-    for (const { itemId = -1 } of items) {
-      if (conditionManager.iconMapping[`${itemId}_default`] !== undefined)
-        return itemId
-    }
-    return -1
+  const isFocus = (marker: API.MarkerVo) => {
+    const { focus } = stateManager.state
+    return isMarkerVo(focus) && marker.id === focus.id
   }
 
-  const getMarkerState = (id?: number) => {
-    const { hover, active, focus } = stateManager.state
-    if (isMarkerVo(focus) && id === focus.id)
-      return 'focus'
-    if (isMarkerVo(active) && id === active.id)
-      return 'active'
-    if (isMarkerVo(hover) && id === hover.id)
-      return 'hover'
-    return 'default'
+  const isMarked = (marker: API.MarkerVo) => {
+    return archiveStore.currentArchive.body.Data_KYJG.has(marker.id!)
+  }
+
+  const getMarkerState = (marker: API.MarkerVo) => {
+    return isMarked(marker) ? 'marked' : 'default'
+  }
+
+  const getMarkerPosition = (marker: API.MarkerVo) => {
+    if (marker.extra?.underground?.is_underground)
+      return 'underground'
+    return 'aboveground'
+  }
+
+  const getMarkerOpacity = (marker: API.MarkerVo) => {
+    if (isMarked(marker) && stateManager.get('hideMarkedMarker'))
+      return ICON.inconspicuousOpacity
+    const { hover } = stateManager.state
+    return (isMarkerVo(hover) && marker.id === hover.id) ? 0.8 : 1
   }
 
   return new IconLayer({
@@ -41,25 +46,36 @@ export const getMarkersFrom = (target: GenshinBaseLayer): IconLayer<API.MarkerVo
     iconAtlas: conditionManager.spiritImage,
     iconMapping: conditionManager.iconMapping,
     getIcon: (marker) => {
-      const isMarked = archiveStore.currentArchive.body.Data_KYJG.has(marker.id as number)
-      const state = isMarked ? 'marked' : getMarkerState(marker.id)
-      const validItemId = findValidItemId(marker.itemList)
-      return `${validItemId}${marker.extra?.underground?.is_underground ? '_ug' : ''}_${state}`
+      return `${marker.render.itemId}_${getMarkerPosition(marker)}_${getMarkerState(marker)}`
     },
-    getSize: 40,
+    getSize: (marker) => {
+      return isFocus(marker) ? 55 : 50
+    },
+    getColor: (marker) => {
+      return [0, 0, 0, 255 * getMarkerOpacity(marker)]
+    },
+    getPosition: (marker) => {
+      const [x, y] = marker.position?.split(',').map(Number) as [number, number]
+      return target.context.deck.projectCoord([x, y])
+    },
     sizeScale: 1,
     sizeMinPixels: 4,
-    sizeMaxPixels: 40 * 2 ** (target.context.deck.mainViewState.zoom + 2),
+    sizeMaxPixels: 50 * 2 ** (target.context.deck.mainViewState.zoom + 2),
     updateTriggers: {
+      data: [
+        conditionManager.conditionStateId,
+      ],
       getIcon: [
+        archiveStore.currentArchive.body.Data_KYJG.size,
+      ],
+      getColor: [
         stateManager.state.hover,
-        stateManager.state.active,
+        stateManager.state.hideMarkedMarker,
+        archiveStore.currentArchive.body.Data_KYJG.size,
+      ],
+      getSize: [
         stateManager.state.focus,
       ],
-    },
-    getPosition: (d) => {
-      const [x, y] = d.position?.split(',').map(Number) as [number, number]
-      return [x + center[0], y + center[1], 0]
     },
   })
 }
